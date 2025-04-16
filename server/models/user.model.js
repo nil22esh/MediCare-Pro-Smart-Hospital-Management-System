@@ -2,51 +2,54 @@ import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    phone: {
+      type: String,
+      unique: true,
+      required: true,
+    },
+    gender: {
+      type: String,
+      required: true,
+    },
+    dob: {
+      type: Date,
+      required: true,
+    },
+    role: {
+      type: String,
+      required: true,
+      enum: [
+        "admin",
+        "doctor",
+        "patient",
+        "nurse",
+        "receptionist",
+        "pharmacist",
+        "lab_tech",
+        "support_staff",
+      ],
+    },
+    address: {
+      type: String,
+    },
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  phone: {
-    type: String,
-    unique: true,
-    required: true,
-  },
-  gender: {
-    type: String,
-    required: true,
-  },
-  dob: {
-    type: Date,
-    required: true,
-  },
-  role: {
-    type: String,
-    required: true,
-    enum: [
-      "admin",
-      "doctor",
-      "patient",
-      "nurse",
-      "receptionist",
-      "pharmacist",
-      "lab_tech",
-      "support_staff",
-    ],
-  },
-  address: {
-    type: String,
-  },
-});
+  { timestamps: true }
+);
 
 // hasing password
 userSchema.pre("save", async function (next) {

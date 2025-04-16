@@ -188,10 +188,157 @@ Deletes a user by ID. Only accessible by admin users.
 
 ---
 
+# 🩺 Doctor Management API
+
+This API is part of a full-stack Hospital Management System and is responsible for managing doctor profiles, their availability, and their assignments. It includes functionality for creating, reading, updating, and deleting doctor profiles, accessible based on role-based authentication (Doctor/Admin).
+
+---
+
+## 📁 Doctor Profile Endpoints
+
+---
+
+### ▶️ `POST /create-doctor-profile`
+
+**🔹 Description:**  
+Create a new doctor profile. Only accessible by authenticated users with the **Doctor** role.
+
+**🔸 Body Parameters:**
+
+```json
+{
+  "specialization": "Cardiologist",
+  "qualifications": ["MBBS", "MD"],
+  "experience": 5,
+  "department": "Cardiology",
+  "availableSlots": [
+    {
+      "date": "2025-04-15",
+      "time": "10:00 AM"
+    }
+  ]
+}
+```
+
+**✅ Success Response:**
+
+```json
+{
+  "success": true,
+  "message": "Doctor profile created successfully",
+  "data": {
+    /* created doctor object */
+  }
+}
+```
+
+---
+
+### 📥 `GET /all-doctors`
+
+**🔹 Description:**  
+Fetches all doctor profiles. Only accessible by **Admin** users.
+
+**🔸 Body Parameters:**  
+_None_
+
+**✅ Success Response:**
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "_id": "...",
+      "specialization": "Dermatologist",
+      "experience": 4,
+      "department": "Skin Care"
+    }
+  ]
+}
+```
+
+---
+
+### 📥 `GET /doctor-profile/:doctorId`
+
+**🔹 Description:**  
+Fetch a doctor’s profile using their ID. Accessible by authenticated **Doctor** users.
+
+**🔸 URL Params:**  
+`doctorId` – ID of the doctor
+
+**✅ Success Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "_id": "...",
+    "specialization": "Neurologist",
+    "experience": 10
+  }
+}
+```
+
+---
+
+### 🔄 `PUT /update-profile/:doctorId`
+
+**🔹 Description:**  
+Update an existing doctor profile. Only accessible by the **Doctor** themselves.
+
+**🔸 URL Params:**  
+`doctorId` – ID of the doctor
+
+**🔸 Body Parameters:** _(any of the following fields can be updated)_
+
+```json
+{
+  "qualifications": ["MBBS", "MD", "DM"],
+  "experience": 8,
+  "status": "off-duty"
+}
+```
+
+**✅ Success Response:**
+
+```json
+{
+  "success": true,
+  "message": "Doctor profile updated successfully",
+  "data": {
+    /* updated doctor object */
+  }
+}
+```
+
+---
+
+### ❌ `DELETE /delete-profile/:doctorId`
+
+**🔹 Description:**  
+Deletes a doctor profile. Only accessible by **Admin** users.
+
+**🔸 URL Params:**  
+`doctorId` – ID of the doctor to delete
+
+**✅ Success Response:**
+
+```json
+{
+  "success": true,
+  "message": "Doctor profile deleted successfully"
+}
+```
+
+---
+
 ## 🔐 Authentication Middleware
 
 - JWT Auth is required on all private endpoints.
 - Admin-only routes are protected using `checkIsAdmin` middleware.
+- Ensures the authenticated user has a "Doctor" role using `checkIsDoctor` middleware.
 
 ---
 
