@@ -334,11 +334,77 @@ Deletes a doctor profile. Only accessible by **Admin** users.
 
 ---
 
+# 🏥 Patient Management API - Hospital Management System
+
+This module handles the **Patient-related functionality** of the Hospital Management System. It allows for the registration, updating, and retrieval of patient information with role-based access control.
+
+---
+
+## 🧾 API Endpoints
+
+### 1. **Add Patient**
+
+- **Route**: `POST /add-patient`
+- **Access**: Authenticated User with Patient Role
+- **Middleware**: `jwtAuth`, `checkIsPatient`
+- **Body Parameters**:
+  ```json
+  {
+    "userId": "ObjectId",
+    "bloodGroup": "A+",
+    "emergencyContact": {
+      "name": "John Doe",
+      "relation": "Brother",
+      "phone": "1234567890"
+    },
+    "allergies": ["Peanuts", "Dust"],
+    "healthHistory": ["Asthma"],
+    "currentMedications": ["Inhaler"],
+    "insuranceDetails": {
+      "provider": "ABC Insurance",
+      "policyNumber": "XYZ123456",
+      "validTill": "2025-12-31"
+    }
+  }
+  ```
+
+---
+
+### 2. **Get All Patients**
+
+- **Route**: `GET /get-all-patients`
+- **Access**: Admin only
+- **Middleware**: `jwtAuth`, `checkIsAdmin`
+
+---
+
+### 3. **Get Patient By ID**
+
+- **Route**: `GET /get-patient/:id`
+- **Access**: Authenticated Patient
+- **Middleware**: `jwtAuth`, `checkIsPatient`
+- **Params**:
+  - `id`: Patient ObjectId
+
+---
+
+### 4. **Update Patient Profile**
+
+- **Route**: `PUT /update-patient/:id`
+- **Access**: Authenticated Patient
+- **Middleware**: `jwtAuth`, `checkIsPatient`
+- **Params**:
+  - `id`: Patient ObjectId
+- **Body**: Any subset of patient schema fields to be updated
+
+---
+
 ## 🔐 Authentication Middleware
 
 - JWT Auth is required on all private endpoints.
 - Admin-only routes are protected using `checkIsAdmin` middleware.
 - Ensures the authenticated user has a "Doctor" role using `checkIsDoctor` middleware.
+- Grants access only to users with "Patient" role using `checkIsPatient` middleware.
 
 ---
 
