@@ -5,6 +5,7 @@ import dbConnection from "./db/dbConnection.js";
 import userRouter from "./routes/user.routes.js";
 import doctorRouter from "./routes/doctor.routes.js";
 import patientRouter from "./routes/patient.routes.js";
+import appointmentRouter from "./routes/appointment.routes.js";
 
 // configuring dotenv
 dotenv.config();
@@ -21,6 +22,7 @@ app.use(cookieParser());
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/doctors", doctorRouter);
 app.use("/api/v1/patients", patientRouter);
+app.use("/api/v1/appointments", appointmentRouter);
 
 // starting the server
 app.listen(port, () => {

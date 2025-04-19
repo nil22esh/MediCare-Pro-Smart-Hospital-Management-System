@@ -276,6 +276,48 @@ export const deleteUser = async (req, res) => {
   }
 };
 
-export const forgotPassword = async (req, res) => {};
-
-export const resetPassword = async (req, res) => {};
+export const resetPassword = async (req, res) => {
+  const { email, newPassword } = req.body;
+  // Validate the request body
+  if (!email || !newPassword) {
+    return res.status(400).json({
+      success: false,
+      message: "New Password is required",
+    });
+  }
+  try {
+    // check for existing user
+    const existingUser = await User.findOne({ email });
+    if (!existingUser) {
+      return res.status(400).json({
+        success: false,
+        message: "User does not exist, please register",
+      });
+    }
+    // check if user password is less than 6 characters
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: "Password must be at least 6 characters",
+      });
+    }
+    // update password
+    existingUser.password = newPassword;
+    await existingUser.save();
+    // generate jwt token
+    const token = await existingUser.generateJwtToken();
+    // send sucess response
+    return res.status(200).json({
+      success: true,
+      message: "Password reset successful!",
+      user: existingUser,
+      token: token,
+    });
+  } catch (error) {
+    console.log(`Error while forgotPassword: ${error.message}`);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
